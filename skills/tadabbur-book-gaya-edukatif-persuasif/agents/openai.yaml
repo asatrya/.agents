@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tadabbur Book: Gaya Edukatif Persuasif"
+  short_description: "Menulis prosa Tadabbur Book yang jernih dan persuasif"
+  default_prompt: "Gunakan $tadabbur-book-gaya-edukatif-persuasif untuk menulis atau menyunting prosa Tadabbur Book."

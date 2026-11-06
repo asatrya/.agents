@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: instagram-whisper-fallback
+expected_outcome: |
+  The result attempts an authorized yt-dlp caption workflow first, falls back to audio-only download and Whisper when no usable captions exist, keeps credentials out of the workflow, and reports any Instagram restriction or transcription caveat honestly.

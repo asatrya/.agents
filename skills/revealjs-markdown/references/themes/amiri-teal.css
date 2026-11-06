@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:wght@400;500;700&display=swap');
+
+:root {
+  --heading-font: "Amiri", Georgia, serif;
+  --body-font: "DM Sans", Arial, sans-serif;
+  --arabic-font: "Amiri", Georgia, serif;
+  --background-color: #f6f0e2;
+  --section-divider-bg: #123b35;
+  --primary-color: #b68232;
+  --text-color: #183830;
+  --muted-color: #61736a;
+  --line-color: #d5c29d;
+  --dot-color: #d5c39f;
+  --cream: #fffaf0;
+  --cream-text: #fff8e9;
+  --gold: #d4a659;
+  --gold-bright: #edc573;
+  --gold-muted: #d8c5a0;
+  --teal-deep: #123b35;
+  --teal-mid: #173d35;
+  --assumption: #af5b46;
+  --assumption-text: #9b4935;
+  --assumption-bg: #fff6ed;
+  --correction: #197063;
+  --correction-text: #176357;
+  --correction-bg: #f0f8f3;
+  --takeaway-bg: #e8ddc5;
+  --quote-text: #fffdf6;
+  --arabic-gold: #f2c66d;
+  --refs-glow: rgba(201, 159, 82, 0.18);
+}

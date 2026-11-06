@@ -1,0 +1,4 @@
+interface:
+  display_name: "Newstore Git"
+  short_description: "Enforce Newstore Git naming conventions"
+  default_prompt: "Use $newstore-git to apply Newstore branch, commit, and MR naming conventions."

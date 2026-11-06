@@ -1,0 +1,31 @@
+[project]
+name = "cloud-storage-mcp"
+version = "0.1.0"
+description = "MCP server for exporting warehouse data to cloud storage and generating signed URLs."
+requires-python = ">=3.12"
+dependencies = [
+    "mcp[cli]",
+    "google-cloud-bigquery",
+    "google-cloud-storage",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+]
+
+[project.scripts]
+cloud-storage-mcp = "cloud_storage_mcp.server:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"

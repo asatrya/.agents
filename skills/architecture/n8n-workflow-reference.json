@@ -1,0 +1,282 @@
+{
+  "name": "Data Request Pipeline",
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "Jira Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "data-request-webhook",
+        "responseMode": "onReceived"
+      },
+      "notes": "Receives Jira webhook when a data request ticket is created or updated. Configure Jira webhook to POST to this URL on issue.created with project filter."
+    },
+    {
+      "id": "extract_ticket",
+      "name": "Fetch Full Ticket",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.issue.self }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {}
+      },
+      "notes": "Fetch full ticket details from Jira REST API. Use Jira credentials stored in n8n."
+    },
+    {
+      "id": "analyze_request",
+      "name": "AI Agent: Analyze Coverage",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [650, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-ai-agent-api/analyze",
+        "body": {
+          "ticket_id": "={{ $json.key }}",
+          "summary": "={{ $json.fields.summary }}",
+          "description": "={{ $json.fields.description }}",
+          "attachments": "={{ $json.fields.attachment }}"
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "notes": "Call the AI agent with ticket context. The agent uses Skill 1 (fulfilling-data-requests-with-dbt) to analyze coverage and generate models. Returns: field_coverage, models_generated, approval_needed, coverage_summary."
+    },
+    {
+      "id": "post_coverage",
+      "name": "Post Coverage Report to Jira",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [850, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://yourcompany.atlassian.net/rest/api/3/issue/={{ $node.extract_ticket.json.key }}/comment",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "body": {
+          "body": {
+            "version": 1,
+            "type": "doc",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "={{ $json.coverage_summary }}"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "notes": "Post the field coverage summary to the Jira ticket as a comment for stakeholder review."
+    },
+    {
+      "id": "check_approval",
+      "name": "Check: Auto-approve or Wait?",
+      "type": "n8n-nodes-base.if",
+      "position": [1050, 300],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.approval_needed }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "notes": "If all requested fields are supported (no Not modeled, no PII concerns), auto-approve. Otherwise, wait for human approval."
+    },
+    {
+      "id": "wait_for_approval",
+      "name": "Wait for Human Approval",
+      "type": "n8n-nodes-base.wait",
+      "position": [1250, 200],
+      "parameters": {
+        "resume": "webhook",
+        "options": {
+          "webhookSuffix": "approval-{{ $node.extract_ticket.json.key }}"
+        }
+      },
+      "notes": "Pause the workflow until a human approves. The approval can come via: (1) a Jira webhook on a specific comment/label, or (2) a callback URL posted in the coverage comment. Timeout: 7 days."
+    },
+    {
+      "id": "dbt_build",
+      "name": "MCP: dbt Build",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1450, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3001/tools/dbt_build",
+        "body": {
+          "selector": "path:models/ad_hoc/={{ $node.extract_ticket.json.key }}/*"
+        },
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "notes": "Call the dbt-runner MCP server to build the ad-hoc models. If using MCP over stdio, replace with a Code node that spawns the process. Timeout: 5 minutes."
+    },
+    {
+      "id": "check_build",
+      "name": "Check Build Success",
+      "type": "n8n-nodes-base.if",
+      "position": [1650, 300],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.exit_code }}",
+              "operation": "equal",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "notes": "Branch on build success. On failure, post error to Jira and stop (or retry)."
+    },
+    {
+      "id": "export_data",
+      "name": "MCP: Export to GCS",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1850, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3002/tools/export_bigquery_to_gcs",
+        "body": {
+          "project": "your-gcp-project",
+          "dataset": "ad_hoc",
+          "table": "={{ $json.model_name }}",
+          "bucket": "your-exports-bucket",
+          "prefix": "exports/={{ $node.extract_ticket.json.key }}/={{ $json.model_name }}",
+          "fmt": "PARQUET"
+        }
+      },
+      "notes": "Call the cloud-storage MCP server to export the materialized table to GCS."
+    },
+    {
+      "id": "sign_urls",
+      "name": "MCP: Generate Signed URLs",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [2050, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3002/tools/generate_signed_urls_for_prefix",
+        "body": {
+          "bucket_name": "your-exports-bucket",
+          "prefix": "exports/={{ $node.extract_ticket.json.key }}/",
+          "expiry_hours": 168
+        }
+      },
+      "notes": "Generate 7-day signed URLs for all exported files."
+    },
+    {
+      "id": "deliver",
+      "name": "Post Signed URLs to Jira",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [2250, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://yourcompany.atlassian.net/rest/api/3/issue/={{ $node.extract_ticket.json.key }}/comment",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "body": {
+          "body": {
+            "version": 1,
+            "type": "doc",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "={{ $json.delivery_message }}"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "notes": "Post the signed URLs as a Jira comment. Include file count, sizes, format, and expiry date."
+    },
+    {
+      "id": "build_failed",
+      "name": "Post Build Failure to Jira",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1650, 500],
+      "parameters": {
+        "method": "POST",
+        "url": "https://yourcompany.atlassian.net/rest/api/3/issue/={{ $node.extract_ticket.json.key }}/comment",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "body": {
+          "body": {
+            "version": 1,
+            "type": "doc",
+            "content": [
+              {
+                "type": "paragraph",
+                "content": [
+                  {
+                    "type": "text",
+                    "text": "dbt build failed. Error: ={{ $json.stderr }}"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "notes": "On build failure, post the error details to the Jira ticket for triage."
+    }
+  ],
+  "connections": {
+    "trigger": {
+      "main": [["extract_ticket"]]
+    },
+    "extract_ticket": {
+      "main": [["analyze_request"]]
+    },
+    "analyze_request": {
+      "main": [["post_coverage"]]
+    },
+    "post_coverage": {
+      "main": [["check_approval"]]
+    },
+    "check_approval": {
+      "main": [
+        ["wait_for_approval"],
+        ["dbt_build"]
+      ]
+    },
+    "wait_for_approval": {
+      "main": [["dbt_build"]]
+    },
+    "dbt_build": {
+      "main": [["check_build"]]
+    },
+    "check_build": {
+      "main": [
+        ["export_data"],
+        ["build_failed"]
+      ]
+    },
+    "export_data": {
+      "main": [["sign_urls"]]
+    },
+    "sign_urls": {
+      "main": [["deliver"]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

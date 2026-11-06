@@ -1,0 +1,29 @@
+[project]
+name = "dbt-runner-mcp"
+version = "0.1.0"
+description = "MCP server for running dbt commands, monitoring builds, and retrieving artifacts."
+requires-python = ">=3.12"
+dependencies = [
+    "mcp[cli]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+]
+
+[project.scripts]
+dbt-runner-mcp = "dbt_runner_mcp.server:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"

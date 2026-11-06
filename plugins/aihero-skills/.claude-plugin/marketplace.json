@@ -1,0 +1,23 @@
+{
+  "name": "aihero",
+  "owner": {
+    "name": "Matt Pocock",
+    "url": "https://www.aihero.dev"
+  },
+  "description": "Matt Pocock's skills for real engineering, as an installable Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "aihero-skills",
+      "source": "./",
+      "description": "Matt Pocock skills with the aihero- prefix.",
+      "category": "engineering",
+      "keywords": [
+        "engineering",
+        "skills",
+        "tdd",
+        "code-review",
+        "grilling"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tadabbur Book: Menulis Pelajaran"
+  short_description: "Menulis pelajaran tadabbur berbasis ayat"
+  default_prompt: "Gunakan $tadabbur-book-menulis-pelajaran untuk menulis atau menilai bagian Pelajaran Tadabbur ini."

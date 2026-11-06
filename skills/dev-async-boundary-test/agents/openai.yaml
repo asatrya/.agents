@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev: Async Boundaries and Hazards"
+  short_description: "Test async boundaries; find starvation, deadlock, herd hazards"
+  default_prompt: "Use $dev-async-boundary-test to design boundary tests for this async distributed system and check it for shared-resource, liveness, and overload hazards."

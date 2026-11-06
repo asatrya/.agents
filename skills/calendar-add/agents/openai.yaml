@@ -1,0 +1,4 @@
+interface:
+  display_name: "Calendar Add"
+  short_description: "Add well-formatted Google Calendar events"
+  default_prompt: "Use $calendar-add to add this event to Google Calendar with complete time, address, and description details."

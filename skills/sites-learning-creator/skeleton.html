@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{COURSE_TITLE}} — E-Learning</title>
+<meta name="description" content="{{DESCRIPTION}}">
+<style>
+/* Paste the full contents of layout.css here. Do not invent a new stylesheet. */
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="nav">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-controls="lessonList" aria-expanded="true">
+      <span class="sidebar-toggle-icon">☰</span>
+      <span class="sidebar-toggle-label">Menu</span>
+    </button>
+    <a class="brand" href="#top">
+      <span class="mark">{{MARK}}</span>
+      <span>{{COURSE_TITLE}}</span>
+    </a>
+    <div class="learning-progress">
+      <span id="progressLabel">0/0 lesson</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <nav class="navlinks">
+      <button class="ghost" id="resetProgress">Reset progres</button>
+    </nav>
+  </div>
+</header>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<main id="top">
+  <section class="course">
+    <aside class="sidebar" id="lessonList" aria-label="Daftar modul"></aside>
+    <article class="article" id="article"></article>
+  </section>
+</main>
+<script>
+/* Course player: embed sourceNotes, parse Markdown, render sidebar/article. */
+</script>
+</body>
+</html>

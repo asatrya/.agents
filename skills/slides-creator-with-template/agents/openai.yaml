@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slides Creator with Template"
+  short_description: "Turn any source content into a deck using a supplied template catalog. If the source is not already a deck, create a deck concept first. Requires source content and a template or layout reference."
+  default_prompt: "Use $slides-creator-with-template to turn my source content into a deck using a template. I will provide (1) the source content (a deck or any other material) and (2) the template or slides layout reference. If the source is not already a deck, create a deck concept first. Do not start until both inputs are given."

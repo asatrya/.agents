@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: youtube-caption-first
+expected_outcome: |
+  The result checks yt-dlp, Whisper, ffmpeg, and Python before network work, attempts manual then auto captions without downloading media, and produces a clean transcript with its method and language reported. If captions are unavailable, it falls back to Whisper rather than claiming success.
