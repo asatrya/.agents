@@ -1,0 +1,30 @@
+[project]
+name = "jira-connector-mcp"
+version = "0.1.0"
+description = "MCP server for Jira integration: fetch tickets, post comments, transition issues."
+requires-python = ">=3.12"
+dependencies = [
+    "mcp[cli]",
+    "httpx",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+]
+
+[project.scripts]
+jira-connector-mcp = "jira_mcp.server:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
