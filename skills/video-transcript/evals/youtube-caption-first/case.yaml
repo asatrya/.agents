@@ -1,4 +1,4 @@
 schema_version: "1.1"
 name: youtube-caption-first
 expected_outcome: |
-  The result checks yt-dlp, Whisper, ffmpeg, and Python before network work, attempts manual then auto captions without downloading media, and produces a clean transcript with its method and language reported. If captions are unavailable, it falls back to Whisper rather than claiming success.
+  The result checks yt-dlp before network work, attempts manual then auto captions without downloading media, and produces a clean transcript with its method and language reported. It checks Whisper, ffmpeg, and Python only when their branches are needed, asking permission before installing any missing dependency.

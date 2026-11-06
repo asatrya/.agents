@@ -1,4 +1,4 @@
 schema_version: "1.1"
 name: missing-dependency
 expected_outcome: |
-  The result performs a dependency preflight before contacting the URL and clearly reports any missing or unusable executable without silently installing packages or claiming a transcript was created.
+  The result performs a dependency preflight before contacting the URL, clearly reports any missing or unusable executable, and asks for explicit permission to download and install it before continuing. It never installs silently or claims a transcript was created without the dependency.

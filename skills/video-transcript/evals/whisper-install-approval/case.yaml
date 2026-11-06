@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: whisper-install-approval
+expected_outcome: |
+  The result defers the Whisper check until captions are unavailable, explains why Whisper is now required, asks for explicit installation permission, and waits for approval before downloading media or running transcription.

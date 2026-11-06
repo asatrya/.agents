@@ -1,7 +1,7 @@
 ---
 name: video-transcript
-description: Download or generate a transcript from a YouTube or Instagram URL. Use this skill whenever the user provides a social-media video, Reel, Short, or post link and asks for a transcript, subtitles, captions, transcription, or the spoken text—even if they do not mention yt-dlp or Whisper. Prefer captions downloaded with yt-dlp; only download media and run Whisper when no usable captions are available.
-compatibility: Requires shell access to yt-dlp, Whisper CLI, ffmpeg, and Python 3 for caption cleanup. The skill checks these dependencies before doing any network or media work.
+description: Download or generate a transcript from a YouTube or Instagram URL. Use this skill whenever the user provides a social-media video, Reel, Short, or post link and asks for a transcript, subtitles, captions, transcription, or the spoken text—even if they do not mention yt-dlp or Whisper. Prefer captions downloaded with yt-dlp; only download media and run Whisper when no usable captions are available. Check each dependency at the point it becomes necessary and ask for explicit permission before downloading or installing a missing one.
+compatibility: Requires shell access to yt-dlp. Whisper CLI, ffmpeg, and Python 3 are checked only for branches that need them; if a required tool is missing, ask before installing it.
 ---
 
 # Video transcript
@@ -20,29 +20,31 @@ Keep downloaded media in a temporary directory and remove it after a successful 
 
 ## Workflow
 
-### 1. Validate the request and preflight every dependency
+### 1. Validate the request and gate installation by branch
 
 Accept a single YouTube or Instagram URL. Use `--no-playlist` so a link to a collection does not unexpectedly download many items. Do not bypass access controls or ask the user to paste passwords/cookies into chat.
 
-Run this check before attempting the URL. The check is intentionally first because a missing tool should be reported before spending time on network requests:
+`yt-dlp` is always required because it inspects the URL and is used for both caption and media retrieval. Check it before any network work:
 
 ```bash
-set -eu
-
-for tool in yt-dlp whisper ffmpeg python3; do
-  if ! command -v "$tool" >/dev/null 2>&1; then
-    echo "Missing required tool: $tool" >&2
-    exit 1
-  fi
-done
-
-yt-dlp --version
-whisper --help >/dev/null
-ffmpeg -version >/dev/null
-python3 --version
+if command -v yt-dlp >/dev/null 2>&1 && yt-dlp --version >/dev/null 2>&1; then
+  yt-dlp --version
+else
+  echo "yt-dlp is not installed or is unusable."
+fi
 ```
 
-If `yt-dlp` or `whisper` is missing, stop and tell the user exactly which executable is missing. Do not silently install packages. If Whisper's CLI is present but its help command fails, treat Whisper as unusable and report that. `ffmpeg` is required for audio extraction and some subtitle conversions.
+When a required executable is missing or unusable, do not silently install it and do not continue as if it were available. Detect the local platform and available package manager, then show the user the exact proposed command and ask for permission, for example:
+
+```text
+yt-dlp is required to inspect and download this URL, but it is not installed.
+I can install it with: <detected install command>
+Should I download and install it?
+```
+
+Prefer an available package manager such as Homebrew or `pipx`; use `python3 -m pip install --user ...` only when appropriate. Do not add `sudo`, modify shell startup files, or install globally without explicit approval. After the user approves, run the proposed command, re-check the executable and version, and stop with the error if installation fails.
+
+Do not ask to install Whisper during this initial check: Whisper is not needed when downloadable captions exist. Ask for Whisper only after both caption branches produce no usable file. Ask for `ffmpeg` only when audio/video extraction or a requested subtitle conversion requires it, and ask for Python 3 before using the bundled caption-cleanup helper if Python 3 is missing.
 
 ### 2. Create an isolated work area and inspect the source
 
@@ -75,10 +77,11 @@ yt-dlp --no-playlist --skip-download \
   --write-subs \
   --sub-langs "$SUB_LANGS" \
   --sub-format "srt/vtt/best" \
-  --convert-subs srt \
   --output "$WORK/caption.%(ext)s" \
   "<URL>"
 ```
+
+If `ffmpeg` is installed, add `--convert-subs srt` to the command. Otherwise omit that flag and preserve the downloaded VTT/SRT; the bundled helper accepts either format. This keeps caption-only work from requiring a media converter.
 
 Look for a newly created `.srt` or `.vtt` file under `$WORK`. A successful exit code alone is not proof that a caption file was created. If a manual caption file exists, use it and skip the auto-caption and Whisper branches.
 
@@ -91,7 +94,6 @@ yt-dlp --no-playlist --skip-download \
   --write-auto-subs \
   --sub-langs "$SUB_LANGS" \
   --sub-format "srt/vtt/best" \
-  --convert-subs srt \
   --output "$WORK/caption.%(ext)s" \
   "<URL>"
 ```
@@ -101,6 +103,8 @@ Treat an auto-caption file as a valid transcript source, but label the result as
 ### 5. Normalize a downloaded caption file
 
 When a caption file exists, copy it to the output directory as `captions.srt` (or preserve `.vtt` if conversion was not possible), then run the bundled helper to remove cue numbers, timestamps, markup, and adjacent duplicate cues:
+
+Check `python3` immediately before invoking the helper. If it is missing or unusable, ask for permission to install it using the detected package manager. If the user declines, preserve the raw caption file and explain that a clean plain-text transcript could not be generated.
 
 ```bash
 cp "$CAPTION_FILE" "$OUT/captions.${CAPTION_FILE##*.}"
@@ -113,6 +117,23 @@ If the skill is copied or packaged elsewhere, resolve the helper relative to the
 ### 6. Fall back to Whisper only when no usable captions exist
 
 Download the best available audio track first. This is faster and uses much less disk than downloading video; it still satisfies the transcription need. If the user explicitly requests the video, or audio-only download fails, use the best combined video/audio format instead.
+
+At this point, check both dependencies before downloading media:
+
+```bash
+command -v ffmpeg >/dev/null 2>&1 && ffmpeg -version >/dev/null 2>&1
+command -v whisper >/dev/null 2>&1 && whisper --help >/dev/null 2>&1
+```
+
+If either check fails, tell the user why that tool is now required and ask for permission to download/install it. For example:
+
+```text
+No usable captions were found, so Whisper is required to transcribe the audio.
+Whisper is not installed. I can install it with: <detected install command>
+Should I download and install it?
+```
+
+If the user declines, stop before downloading media and report that the caption-first workflow found no usable transcript. If the user approves, install only the missing dependency, re-check it, and then continue.
 
 ```bash
 yt-dlp --no-playlist \
@@ -160,4 +181,5 @@ Notes: <only relevant caveats>
 - **Caption download returns no file:** do not infer success from exit status; try the auto-caption branch, then Whisper.
 - **Instagram login/age/location restriction:** report the restriction and ask for an authorized, already-available access method; never request credentials in the transcript workflow.
 - **Playlist or carousel unexpectedly appears:** keep `--no-playlist` and ask the user which individual URL they want.
+- **Missing dependency:** ask for explicit permission to download/install the missing tool at the point the current branch needs it; do not silently install or claim that transcription completed.
 - **Whisper model download is blocked:** report that the model is unavailable and return any downloaded caption file; do not claim that transcription completed.
