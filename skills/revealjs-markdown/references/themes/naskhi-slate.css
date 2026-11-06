@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;700&family=Outfit:wght@400;500;700&display=swap');
+
+:root {
+  --heading-font: "Cormorant Garamond", Georgia, serif;
+  --body-font: "Outfit", Arial, sans-serif;
+  --arabic-font: "Amiri", Georgia, serif;
+  --background-color: #eef1f2;
+  --section-divider-bg: #1e3a4c;
+  --primary-color: #c08a5a;
+  --text-color: #1b2b34;
+  --muted-color: #5c6b73;
+  --line-color: #c5cdd1;
+  --dot-color: #c5cdd1;
+  --cream: #f7f9fa;
+  --cream-text: #f4f7f8;
+  --gold: #d4a574;
+  --gold-bright: #e0b888;
+  --gold-muted: #b8c4c8;
+  --teal-deep: #1e3a4c;
+  --teal-mid: #254556;
+  --assumption: #a85a4a;
+  --assumption-text: #8c4a3e;
+  --assumption-bg: #f7eee8;
+  --correction: #2a7a6e;
+  --correction-text: #24685e;
+  --correction-bg: #e8f3f0;
+  --takeaway-bg: #dfe6e8;
+  --quote-text: #f4f7f8;
+  --arabic-gold: #e0b888;
+  --refs-glow: rgba(192, 138, 90, 0.18);
+}

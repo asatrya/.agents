@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Compilation to Shorts"
+  short_description: "Plan travel videos into compelling short-form edits"
+  default_prompt: "Use $video-compilation-to-shorts to turn my travel footage into a concise short-form edit plan."

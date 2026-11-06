@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sites Learning Creator"
+  short_description: "Create Markdown-based learning sites"
+  default_prompt: "Use $sites-learning-creator to turn the provided Markdown notes into a self-contained learning HTML site."

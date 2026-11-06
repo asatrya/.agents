@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fraunces:wght@400;700&family=Nunito+Sans:wght@400;500;700&display=swap');
+
+:root {
+  --heading-font: "Fraunces", Georgia, serif;
+  --body-font: "Nunito Sans", Arial, sans-serif;
+  --arabic-font: "Amiri", Georgia, serif;
+  --background-color: #f7efe6;
+  --section-divider-bg: #4a1f2a;
+  --primary-color: #d4a05a;
+  --text-color: #2a1618;
+  --muted-color: #7a5e55;
+  --line-color: #e0cbb8;
+  --dot-color: #e0cbb8;
+  --cream: #fff8f0;
+  --cream-text: #f8efe6;
+  --gold: #d4a05a;
+  --gold-bright: #e8b86a;
+  --gold-muted: #e0cbb8;
+  --teal-deep: #4a1f2a;
+  --teal-mid: #5a2834;
+  --assumption: #b54a3c;
+  --assumption-text: #9b3e32;
+  --assumption-bg: #f8ece8;
+  --correction: #3d6e5a;
+  --correction-text: #345c4c;
+  --correction-bg: #eaf3ee;
+  --takeaway-bg: #ead9c6;
+  --quote-text: #f8efe6;
+  --arabic-gold: #e8b86a;
+  --refs-glow: rgba(212, 160, 90, 0.2);
+}

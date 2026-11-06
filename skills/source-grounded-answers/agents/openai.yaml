@@ -1,0 +1,4 @@
+interface:
+  display_name: "Source-Grounded Answers"
+  short_description: "Answer with claim-level source evidence"
+  default_prompt: "Use $source-grounded-answers to answer this question from the provided uploads, prompt sources, or workspace files with exact quotations and locations."

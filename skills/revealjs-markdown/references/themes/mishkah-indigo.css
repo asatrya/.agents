@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Literata:wght@400;700&family=Source+Sans+3:wght@400;500;700&display=swap');
+
+:root {
+  --heading-font: "Literata", Georgia, serif;
+  --body-font: "Source Sans 3", Arial, sans-serif;
+  --arabic-font: "Amiri", Georgia, serif;
+  --background-color: #f7f4ec;
+  --section-divider-bg: #25264a;
+  --primary-color: #b8893e;
+  --text-color: #222436;
+  --muted-color: #6b6a78;
+  --line-color: #d4d0c4;
+  --dot-color: #d4d0c4;
+  --cream: #fffcf6;
+  --cream-text: #f3f1ea;
+  --gold: #c49a4e;
+  --gold-bright: #d4ae62;
+  --gold-muted: #c8c4b8;
+  --teal-deep: #25264a;
+  --teal-mid: #2e3058;
+  --assumption: #a3534a;
+  --assumption-text: #8a453e;
+  --assumption-bg: #f6ecea;
+  --correction: #2f6f68;
+  --correction-text: #285e58;
+  --correction-bg: #e7f1ef;
+  --takeaway-bg: #e4ddd0;
+  --quote-text: #f3f1ea;
+  --arabic-gold: #d4ae62;
+  --refs-glow: rgba(184, 137, 62, 0.2);
+}
