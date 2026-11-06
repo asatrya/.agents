@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: faith-reflection-source-boundaries
+expected_outcome: |
+  The response is a warm reflective piece that uses only the supplied notes as source material, distinguishes reflection from religious authority, avoids invented quotations and citations, and ends with a practical invitation rather than shame.

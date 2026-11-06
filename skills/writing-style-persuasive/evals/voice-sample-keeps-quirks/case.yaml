@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: voice-sample-keeps-quirks
+expected_outcome: |
+  The response is a realistic persuasive note that retains the sample's plain, reflective cadence and occasional asides without fabricating research, using hype, or turning the advice into an idealized parenting lecture.

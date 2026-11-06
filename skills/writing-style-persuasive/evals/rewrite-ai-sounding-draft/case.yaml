@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: rewrite-ai-sounding-draft
+expected_outcome: |
+  The response is a concise persuasive announcement that preserves the program name, weekly schedule, location context, activities, librarian presence, no-registration detail, and non-class framing while removing staged AI language and unsupported promotional claims.
