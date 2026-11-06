@@ -1,0 +1,188 @@
+{
+  "version": 3,
+  "skills": {
+    "adding-dbt-unit-test": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/adding-dbt-unit-test/SKILL.md",
+      "skillFolderHash": "5c9ac964ab089b8a7e5c632ee9f64119746fcb40",
+      "installedAt": "2026-02-16T09:50:05.451Z",
+      "updatedAt": "2026-02-16T10:09:40.397Z"
+    },
+    "answering-natural-language-questions-with-dbt": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/answering-natural-language-questions-with-dbt/SKILL.md",
+      "skillFolderHash": "1bea63635b456df1ff9b572fcbbbed44b246ac56",
+      "installedAt": "2026-02-16T09:50:05.477Z",
+      "updatedAt": "2026-02-16T10:09:40.422Z"
+    },
+    "building-dbt-semantic-layer": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/building-dbt-semantic-layer/SKILL.md",
+      "skillFolderHash": "22b8ea82d516b450a848e8447cfd5ee6911efc0c",
+      "installedAt": "2026-02-16T09:50:05.502Z",
+      "updatedAt": "2026-02-16T10:09:40.444Z"
+    },
+    "configuring-dbt-mcp-server": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/configuring-dbt-mcp-server/SKILL.md",
+      "skillFolderHash": "4cc01ec997cb19336aeeb311aec53d50a91a4498",
+      "installedAt": "2026-02-16T09:50:05.529Z",
+      "updatedAt": "2026-02-16T09:50:05.529Z"
+    },
+    "fetching-dbt-docs": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/fetching-dbt-docs/SKILL.md",
+      "skillFolderHash": "e700c8658831a8478b063af562745ba15eb5c394",
+      "installedAt": "2026-02-16T09:50:05.552Z",
+      "updatedAt": "2026-02-16T10:09:40.466Z"
+    },
+    "migrating-dbt-core-to-fusion": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/migrating-dbt-core-to-fusion/SKILL.md",
+      "skillFolderHash": "6f95e3bb75c648f21a8d7f9833d0aebeeadfc690",
+      "installedAt": "2026-02-16T09:50:05.577Z",
+      "updatedAt": "2026-02-16T09:50:05.577Z"
+    },
+    "running-dbt-commands": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/running-dbt-commands/SKILL.md",
+      "skillFolderHash": "40841982651a5716524f6f0e441d983489c6c91a",
+      "installedAt": "2026-02-16T09:50:05.603Z",
+      "updatedAt": "2026-02-16T09:50:05.603Z"
+    },
+    "troubleshooting-dbt-job-errors": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/troubleshooting-dbt-job-errors/SKILL.md",
+      "skillFolderHash": "638fe3a03ea2512f74754322c69e9953c306a416",
+      "installedAt": "2026-02-16T09:50:05.627Z",
+      "updatedAt": "2026-02-16T09:50:05.627Z"
+    },
+    "using-dbt-for-analytics-engineering": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dbt-labs/dbt-agent-skills.git",
+      "skillPath": "skills/using-dbt-for-analytics-engineering/SKILL.md",
+      "skillFolderHash": "3923ffe2ebde0d10f5ed913b3314eb09afa49ace",
+      "installedAt": "2026-02-16T09:50:05.652Z",
+      "updatedAt": "2026-02-16T10:09:40.488Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f",
+      "installedAt": "2026-02-16T09:50:12.094Z",
+      "updatedAt": "2026-02-16T09:50:12.094Z"
+    },
+    "kafka-engineer": {
+      "source": "404kidwiz/claude-supercode-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/404kidwiz/claude-supercode-skills.git",
+      "skillPath": "kafka-engineer-skill/SKILL.md",
+      "skillFolderHash": "c927f30814852290ef629c00e2be402b30a9786b",
+      "installedAt": "2026-03-18T21:48:42.234Z",
+      "updatedAt": "2026-03-18T21:48:42.234Z"
+    },
+    "brainstorming": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillPath": "skills/brainstorming/SKILL.md",
+      "skillFolderHash": "58daafd7304225167f47a3ecac1f461f00dc86dd",
+      "installedAt": "2026-03-18T22:10:45.045Z",
+      "updatedAt": "2026-03-18T22:10:45.045Z"
+    },
+    "lint-and-validate": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillPath": "skills/lint-and-validate/SKILL.md",
+      "skillFolderHash": "3ee53700f97b1d42a780ca972e5f60f9f624635f",
+      "installedAt": "2026-03-18T22:11:49.462Z",
+      "updatedAt": "2026-03-18T22:11:49.462Z"
+    },
+    "git-pushing": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillPath": "skills/git-pushing/SKILL.md",
+      "skillFolderHash": "55021af25a0bdeca697b3f7efb0c16fd2190d1e4",
+      "installedAt": "2026-03-18T22:12:30.513Z",
+      "updatedAt": "2026-03-18T22:12:30.513Z"
+    },
+    "kaizen": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillPath": "skills/kaizen/SKILL.md",
+      "skillFolderHash": "cbfc82f49d3d4d1dd9280910dbdb7a1c23244e8c",
+      "installedAt": "2026-03-18T22:13:34.186Z",
+      "updatedAt": "2026-03-18T22:13:34.186Z"
+    },
+    "systematic-debugging": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillPath": "skills/systematic-debugging/SKILL.md",
+      "skillFolderHash": "45c7168b42431ef292476475251ec3205f4c6bc3",
+      "installedAt": "2026-03-18T22:14:53.805Z",
+      "updatedAt": "2026-03-18T22:14:53.805Z"
+    },
+    "docker-expert": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillPath": "skills/docker-expert/SKILL.md",
+      "skillFolderHash": "85e58e024d1059f0fd899741c08d21fcf94e8b34",
+      "installedAt": "2026-03-18T22:15:45.421Z",
+      "updatedAt": "2026-03-18T22:15:45.421Z"
+    },
+    "kubernetes-architect": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillPath": "skills/kubernetes-architect/SKILL.md",
+      "skillFolderHash": "8950e2d49191412bf26b983af816d52359068282",
+      "installedAt": "2026-03-18T22:16:13.565Z",
+      "updatedAt": "2026-03-18T22:16:13.565Z"
+    },
+    "allium": {
+      "source": "juxt/allium",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/juxt/allium.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "f6fb08dd301fbdd940c715e1adca7b121bd0e097",
+      "installedAt": "2026-03-25T23:35:39.815Z",
+      "updatedAt": "2026-03-25T23:35:39.815Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "codex",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "cursor"
+  ]
+}

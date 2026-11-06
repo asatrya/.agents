@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../.codex"
+		},
+		{
+			"path": "../.cursor"
+		},
+		{
+			"path": "../Workspace/personal/codex-plugins"
+		},
+		{
+			"path": "../.claude"
+		}
+	]
+}
