@@ -1,0 +1,4 @@
+interface:
+  display_name: "TickTick Create Todo"
+  short_description: "Add a to-do item to TickTick from a user instruction."
+  default_prompt: "Use $tick-tick-create-todo to add the requested task to TickTick."

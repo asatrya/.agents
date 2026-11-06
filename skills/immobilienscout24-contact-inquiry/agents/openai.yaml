@@ -1,0 +1,4 @@
+interface:
+  display_name: "ImmoScout24 Contact Inquiry"
+  short_description: "Send a tailored inquiry from a shared property link"
+  default_prompt: "Use $immobilienscout24-contact-inquiry to send an inquiry for this property."
