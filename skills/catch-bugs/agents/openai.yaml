@@ -1,0 +1,4 @@
+interface:
+  display_name: "Catch Bugs"
+  short_description: "Catch logic bugs that leave wrong results looking healthy"
+  default_prompt: "Use $catch-bugs to review this change for logic flaws that leave results stale or wrong while the caller still succeeds."
