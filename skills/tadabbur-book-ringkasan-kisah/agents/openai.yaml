@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tadabbur Book: Ringkasan Kisah"
+  short_description: "Menulis ringkasan kisah ayat Al-Qur’an"
+  default_prompt: "Gunakan $tadabbur-book-ringkasan-kisah untuk menulis ringkasan kisah dan tafsir singkat dari rangkaian ayat."

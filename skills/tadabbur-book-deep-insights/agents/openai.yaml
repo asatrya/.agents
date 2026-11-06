@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tadabbur Book: Deep Insights"
+  short_description: "Tulis pelajaran tadabbur berbasis ayat dan tafsir"
+  default_prompt: "Gunakan $tadabbur-book-deep-insights untuk menulis pelajaran tadabbur dari ayat jangkar dan tafsir Ar-Razi serta Al-Manar."

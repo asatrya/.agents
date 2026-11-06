@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tadabbur Book: Quran Quote"
+  short_description: "Memformat kutipan ayat Al-Qur’an"
+  default_prompt: "Gunakan $tadabbur-book-quran-quote untuk memeriksa dan memformat kutipan ayat Al-Qur’an."
