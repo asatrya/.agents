@@ -1,0 +1,4 @@
+interface:
+  display_name: "Newstore AWS CLI Authentication"
+  short_description: "Refresh ExpiredToken Newstore AWS/kubectl SSO in-session"
+  default_prompt: "Use $newstore-aws-cli immediately on ExpiredToken. Authenticate in this shell; do not ask the user to refresh SSO first."

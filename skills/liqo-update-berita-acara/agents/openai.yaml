@@ -1,0 +1,4 @@
+interface:
+  display_name: "Liqo Update Berita Acara"
+  short_description: "Sync Liqo events into Berita Acara"
+  default_prompt: "Use $liqo-update-berita-acara to update Liqo 1 or Liqo 2 in the Berita Acara tab, scanning only after the last recorded date through current_date; explicitly state which Liqo. If the request does not clearly name exactly one Liqo, stop and ask before searching or editing."
