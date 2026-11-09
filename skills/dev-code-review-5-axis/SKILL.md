@@ -160,6 +160,22 @@ When you flag a structural problem, propose the move — not just the problem. A
 
 Prefer the remedy that removes moving pieces over one that spreads the same complexity around.
 
+## Plain-Language Findings
+
+Make every issue and recommendation understandable to a capable engineer who did not write the change. Technical precision and plain language are both required:
+
+- Start with the practical problem, then name the technical concept if it helps. Do not write only "race condition," "N+1," "injection," or "type leak"; explain what can happen in this code.
+- State the impact in concrete terms: who or what is affected, under which condition, and what the result is (for example, stale data, a failed request, exposed information, or slower processing).
+- Make the recommendation actionable. Say what to change and where, using a named restructuring when one applies. Avoid vague advice such as "handle this better" or "improve performance."
+- Define acronyms and specialist terms on first use when the audience may not know them. Keep exact identifiers, API names, and file/line references unchanged so the finding remains verifiable.
+- Use this order in each finding: issue in plain language → why it matters → evidence and failure scenario → recommended fix.
+
+Example:
+
+> Required live `src/cache.ts:42`: Two requests can update the same cache entry at the same time. In simple terms, the later write can erase the earlier one and leave callers with stale data. Evidence: ... Failure scenario: ... Remedy: serialize updates with the existing per-key lock.
+
+Do not remove technical evidence to make a finding simpler; explain it. The reader should be able to answer three questions without guessing: “What is wrong?”, “Why should I care?”, and “What should I do?”
+
 ## Change Sizing
 
 Small, focused changes are easier to review, faster to merge, and safer to deploy. Target these sizes:
@@ -280,10 +296,15 @@ Rules:
 - Every claim cites file:line and what you read or ran. If a verdict rests on
   how a library behaves, read its installed source; if you didn't, put the
   item under Unverified.
+- Write every finding and remedy in plain language as well as technical terms.
+  Explain what can happen, who or what is affected, and the concrete change
+  that would fix it. Define jargon or acronyms on first use, but preserve
+  exact identifiers and file:line references.
 
 Return exactly these sections:
 ## Findings
-- {Critical|Required|Consider|Nit|FYI} {live|latent} path:line: the claim
+- {Critical|Required|Consider|Nit|FYI} {live|latent} path:line: the claim in plain language;
+  in simple terms, why it matters and what can happen
   Evidence: ...  Failure scenario: ...  Remedy: ...
 ## Checked, fine
 - item: evidence
@@ -340,6 +361,8 @@ The user sees your review, not the reviewers' reports. Merge them into one:
 4. **Place the "Outside my axis" items** under the right axis, and verify them the same way.
 5. **Check coverage.** Together, the reviewers' "Files opened" lists must cover every changed file. Open any file that no reviewer opened, or say in the review that nobody did.
 6. **Carry the lists forward.** Each reviewer's "Checked, fine" and "Unverified" items go into the review, so nothing anyone reasoned about disappears.
+
+Write the merged review for both the author and the person deciding whether to merge. Every finding must follow the Plain-Language Findings guidance: explain the issue and its practical impact before or alongside the technical detail, then give a concrete recommendation. Preserve the evidence, severity, and `live`/`latent` label; simpler wording must not weaken the claim.
 
 Then label every finding with its severity so the author knows what's required vs optional:
 
@@ -530,6 +553,7 @@ For triaging `npm audit` findings and supply-chain risk (typosquatting, compromi
 ### Verification
 - [ ] Every Critical and Required finding verified by the orchestrator against the code
 - [ ] Reviewer conflicts resolved by reading the code, with the reason recorded
+- [ ] Every finding explains the issue, practical impact, and recommendation in plain language without dropping technical evidence
 - [ ] Mutating error, rollback, and degraded branches makes a test fail
 - [ ] Declarative logic (rules, templates, queries) mutated, not only host code
 - [ ] Each test isolates the condition its name claims
