@@ -31,6 +31,7 @@ On every Newstore/TIDE task:
 | Dash0 dashboard YAML / PromQL panels in platform config | `newstore-dash0-dashboards` |
 | Dash0 permalink / dashboard URL formatting | `dash0-permalinks` |
 | Ticket/WIP journal note | `newstore-journal` |
+| Work log, accomplishment, performance, or impact summary | `newstore-worklog` |
 | Strategy, 1:1s, meeting recaps | `newstore-notes` |
 | Durable Newstore runbook or architecture note | `newstore-knowledge-base` (`$KB`) |
 | Durable note not specific to Newstore | `newstore-knowledge-base` (`$GENKB`) |
