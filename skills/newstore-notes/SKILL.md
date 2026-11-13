@@ -98,3 +98,13 @@ Wikilink Journal tickets that the strategy depends on. Keep time-sensitive facts
 - Append or revise in place. For 1:1s, add a new dated heading at the top of **Notes**.
 - Do not rename the file unless the user asks.
 - If a lasting architecture fact falls out of a strategic note, offer to promote it with `newstore-knowledge-base`. for long-lasting knowledge that is not Newstore specific, add it to /Users/autama/Library/CloudStorage/GoogleDrive-aditya.satrya@gmail.com/My Drive/Personal/Obsidian-Vault/Aditya-Pro/Knowledge Base with proper categorization
+
+## Prep sections
+
+A prep section (a heading like `## 2026-11-10 – Prep: …`, usually in a 1:1 note) is temporary. Once the meeting has happened, the record of what was actually said replaces it.
+
+- **When actual notes are available** (a Granola note or other record for that meeting), replace the whole prep section with a `## {date} – Held` section built from the actual notes. Do not keep the prep alongside it. Link the source (for example the Granola URL) and say if it is an AI summary only. Update any intro line that still points to the prep ("prep below", "next: …").
+- **Do this whenever you touch the note**, not only when asked: on any add-Granola-notes or update request, scan the target 1:1 note for prep sections whose meeting date is in the past and look for their notes (`search_meetings` by participant and date).
+- **When no actual notes exist for a past prep section**, do not delete it and do not leave it silently. Ask the user what to do (keep it, remove it, or fill it in manually), naming the section and date. Granola's free plan only covers the last 30 days, so older meetings can be unreachable; say so.
+- **Future meetings** (date today or later with no record yet) keep their prep section as is.
+- Always tell the user which prep sections were replaced and which remain.
