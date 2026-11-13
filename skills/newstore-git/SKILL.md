@@ -6,13 +6,29 @@ description: >-
   a sub-task). Use for TDP-/NCS-, gitlab.com/newstore, or tasks mentioning merge
   request, web link, or remote link on a Jira ticket. Enforces keyword(TICKET-ID)
   commit and MR subjects. Before git push, reads CI pipeline config and runs
-  local lint/test (or make check) matching MR pipelines. Not for personal or
-  unrelated Git work.
+  local lint/test (or make check) matching MR pipelines. Opening any MR is not
+  finished until its Jira web link is attached automatically, with no extra
+  request or confirmation from the user. Not for personal or unrelated Git work.
 ---
 
 # Newstore Git
 
 Use this skill in the Newstore context whenever the workflow touches Git/GitLab naming **or** Jira **web links** for MRs. It defines **required** naming for commits and MRs and **required** Jira remote-link steps.
+
+**Invoke it first.** Load this skill with the Skill tool before the first commit, push, branch or MR of the task, even when the user only says "commit", "push" or "open MR". Do not work from memory of it.
+
+## Opening an MR: the full sequence
+
+"Open an MR" (or "commit, push and open MR") always means all of these steps, in order. The user does not have to list them, and none of them is an optional follow-up:
+
+1. Commit with a valid subject (see Naming rules).
+2. Run the pre-push checks and fix failures (see Pre-push checks).
+3. Push.
+4. Create the MR with a valid title, by any means (GitLab MCP, `glab`, the URL `git push` prints).
+5. **Attach the MR to the Jira ticket as a web link, automatically (see MR link on the ticket). Do this immediately after step 4, in the same turn, without asking.** Also do it for the parent when the ticket is a subtask.
+6. Report the MR URL and the Jira link result (added, already present, or failed) in the final message.
+
+The task is **not done** while step 5 is missing. Never end with "say so if you want the Jira link" or any other offer to do it later: the user's request to open the MR already authorizes it. The same applies to any MR on a `TDP-`/`NCS-`/... ticket that this task pushes to or touches and that is found without its link.
 
 **Precedence:** For commit and MR **subjects**, this skill overrides generic instructions to “match `git log`” or “follow repository style” when those would produce a different format (for example `TDP-3449 Add something` without a conventional keyword).
 
@@ -119,15 +135,18 @@ This applies to every push, including push-only workflows and pushes that follow
 
 ## MR link on the ticket
 
-After the MR exists, attach its URL to the Jira ticket as a **web link** (remote link). That is the Links / Web links panel, not a comment and not a Jira-to-Jira issue link.
+**Required and automatic.** The moment an MR exists, attach its URL to the Jira ticket as a **web link** (remote link), in the same turn, without asking and without waiting to be told. Opening the MR is what authorizes it. That is the Links / Web links panel, not a comment and not a Jira-to-Jira issue link. This holds for every MR, including one in a different repository than the code you were editing (for example a data-contract MR opened for a data-mapper ticket): the ticket key from the branch name decides where the link goes.
 
-1. Call `listJiraIssueRemoteIssueLinks` (or `getJiraIssue` evidence) on the ticket. Skip if the same MR URL is already present.
-2. Create the web link with Atlassian MCP `addGraphContext`:
+The Atlassian tools may be deferred. Load them in a single ToolSearch call before step 1 (`getAccessibleAtlassianResources`, `getJiraIssueRemoteIssueLinks`, `getJiraIssue`, `addGraphContext`), then get the `cloudId` from `getAccessibleAtlassianResources`.
+
+1. Call `getJiraIssueRemoteIssueLinks` (with the `cloudId` and the ticket key; `getJiraIssue` evidence also works) on the ticket. Skip the add if the same MR URL is already present.
+2. Create the web link with Atlassian MCP `addGraphContext` (pass the `cloudId` at the top level):
    - `relationshipType`: `jira-work-item-links-jira-work-item-remote-link`
    - `objectIdentifier`: the ticket key (e.g. `TDP-4090`)
    - `targetObjectIdentifier`: the GitLab MR URL
    - `title`: `MR !<iid> - <MR title>` (do not paste the raw URL as the title). Example: `MR !28 - fix(TDP-4090): keep two event-receiver replicas via autoscaler`
 3. If the ticket is a subtask, get its parent and repeat steps 1–2 on the parent. Do not guess the ticket ID or parent.
+4. Say what happened in the final message: link added (ticket, and parent if any), already present, or failed.
 
 Do **not** substitute:
 
@@ -135,3 +154,10 @@ Do **not** substitute:
 - `createIssueLink` — that only links two Jira issues
 
 If `addGraphContext` fails, say so after creating the MR. Do not fall back to a comment.
+
+### Do not ask, do not defer
+
+- Never ask "do you want the Jira link?" and never mention it as an offer. It is part of the work, like the push.
+- Never skip it because the user's words were only "commit, push and open MR". That wording includes it.
+- Never leave an MR unlinked at the end of a turn. If you notice an MR from this task without a link (for example one you opened earlier, or one a push updated), add it then.
+- The Jira web link is a pre-authorized write for this workflow. It does not conflict with the general rule not to write to other systems without being asked.
