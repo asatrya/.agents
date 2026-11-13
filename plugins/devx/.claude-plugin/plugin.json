@@ -1,0 +1,18 @@
+{
+  "name": "devx",
+  "version": "0.1.0",
+  "description": "Developer-experience starter templates and project-context helpers for AI-assisted coding.",
+  "author": {
+    "name": "Aditya Satrya Utama"
+  },
+  "license": "MIT",
+  "keywords": [
+    "developer-experience",
+    "starter-pack",
+    "project-templates",
+    "coding-agents"
+  ],
+  "skills": [
+    "./skills/starter-pack"
+  ]
+}

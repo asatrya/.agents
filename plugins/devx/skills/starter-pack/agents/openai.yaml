@@ -1,0 +1,4 @@
+interface:
+  display_name: "DevX: Starter Pack"
+  short_description: "Create structured project context templates"
+  default_prompt: "Use $starter-pack to create the structured project context files for this repository."
