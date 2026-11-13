@@ -4,10 +4,13 @@ description: >-
   Refreshes expired Newstore AWS SSO credentials for kubectl, EKS, and AWS CLI.
   Use immediately when a Newstore AWS or kubectl command fails with ExpiredToken,
   ExpiredTokenException, "credentials are expired", SSO session expired,
-  "Unable to connect to the server" from aws eks get-token, or unauthenticated
-  AWS CLI — including mid-task when the original request was not authentication.
-  Do not ask the user to run aws-sso-profile or refresh SSO first. Newstore
-  profiles only (for example newstore-s-team-data-provisioning:AWSAdministratorAccess).
+  "InvalidClientTokenId", "unknown flag -u" from aws-sso, "Unable to connect to
+  the server" from aws eks get-token, or unauthenticated AWS CLI — including
+  mid-task when the original request was not authentication. Also use when the
+  user asks for credentials for a Newstore account or stage (staging,
+  production, recovery). Do not ask the user to run aws-sso-profile or refresh
+  SSO first. Newstore profiles only (for example
+  newstore-s-team-sfcc:AWSAdministratorAccess).
 metadata:
   short-description: "Refresh expired Newstore AWS CLI sessions"
 ---
@@ -24,58 +27,93 @@ Do not stop and ask the user to refresh SSO, run `aws-sso-profile`, or retry aft
 
 The only user action allowed is completing an on-screen browser OTP/MFA/security challenge. Never handle or expose passwords, OTPs, or recovery codes.
 
-## Profile
+## Workflow
 
-Keep the profile name quoted. Prefer, in order:
+Three steps: log in, pick the profile, load the credentials.
+
+### 1. Log in
+
+```bash
+aws-sso login
+```
+
+This opens the SSO sign-in in the browser. If the user must complete a browser sign-in, OTP, or MFA challenge, ask them to do that and wait. If it prints nothing and exits 0, the login succeeded; confirm in step 2 (the header shows `Expires in: <time>`).
+
+If the CLI does not open a visible tab, read `StartUrl` from `~/.config/aws-sso/config.yaml` and open that exact URL; never guess an SSO URL.
+
+### 2. Find the profile with `aws-sso list`
+
+```bash
+aws-sso list
+```
+
+Read the **whole** output. Do not truncate it with `head`/`tail`: the role list is short, and a cut-off list can hide the account you need.
+
+The `Expires` column shows `Expired` for every role right after login. That is expected: role credentials are fetched when a profile is loaded in step 3.
+
+Account aliases follow `newstore-<stage>-<team>`, where the stage letter is:
+
+| Letter | Stage |
+|---|---|
+| `s` | staging |
+| `p` | production |
+| `r` | recovery |
+
+Examples: `newstore-s-team-sfcc` is the SFCC staging account, `newstore-p-team-sfcc` is SFCC production, `newstore-r-team-sfcc` is SFCC recovery.
+
+The profile name is in the `Profile` column, for example `newstore-s-team-sfcc:AWSAdministratorAccess`. Pick it in this order:
 
 1. The profile already used in the failed command or this conversation.
 2. A profile the user just named.
-3. If none is known, stop and ask for the profile name (and role ARN if that is also missing). Do not invent an account or role.
+3. The row that matches the team and stage the user asked for.
 
-Example: `newstore-s-team-data-provisioning:AWSAdministratorAccess`.
+If the stage or team is ambiguous, or the matching row is missing from the list, stop and ask. Do not guess, and never fall back to a different stage. In particular, do not pick production (`p`) because it is the only match you can find. Do not invent an account or role.
 
-## Workflow
+If you need to match an account ID from a manifest (for example a Flux `apps/<stage>` overlay) to a stage, match it against the `AccountIdPad` column.
 
-1. Inspect only that profile’s credential-process definition:
+### 3. Load the credentials
 
-   ```bash
-   PROFILE_NAME='newstore-s-team-data-provisioning:AWSAdministratorAccess'
-   CREDENTIAL_PROCESS="$(aws configure get credential_process --profile "$PROFILE_NAME")"
-   ```
+```bash
+eval $(aws-sso -L error eval -p '<profile>')
+```
 
-   Extract the role ARN (the current Newstore format contains `--arn`):
+For example `eval $(aws-sso -L error eval -p 'newstore-s-team-sfcc:AWSAdministratorAccess')`.
 
-   ```bash
-   ROLE_ARN="$(printf '%s\n' "$CREDENTIAL_PROCESS" | sed -nE 's/.*--arn(=|[[:space:]]+)([^[:space:]]+).*/\2/p')"
-   ```
+Rules for this step:
 
-   If no role ARN is present, stop and ask for the intended role ARN; do not invent an account or role.
+- **Never pipe or redirect the `eval`** (no `| tail`, no `2>&1 | ...`). A pipe runs `eval` in a subshell and the exported variables are lost.
+- **Each Bash tool call is a fresh shell.** The variables do not carry over between calls. Start every call that needs AWS access with the `eval` line, then run the command in that same call.
+- **Verify** in the same call:
 
-2. Authenticate the AWS SSO browser session when needed. Run `aws-sso login` and use the connected Chrome browser for the sign-in flow. If the CLI does not open a visible tab, read the `StartUrl` from `~/.config/aws-sso/config.yaml` and open that exact URL in Chrome; never guess an SSO URL. If credentials, an OTP, or an MFA/security challenge are required, leave the page ready and ask the user to complete it.
+  ```bash
+  eval $(aws-sso -L error eval -p '<profile>'); aws sts get-caller-identity
+  ```
 
-3. Force-refresh the role credentials with the modern subcommand-first syntax. Do not replay a legacy `credential_process` string such as `aws-sso -u open ... process ...`, because the global flags may be rejected before the subcommand:
+  Check that `Account` is the account you expect for the stage you picked.
+- **Never print credential values.** To check what is set, use `env | grep -i '^AWS_' | sed 's/=.*/=<set>/'`. Do not echo `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, or `AWS_SESSION_TOKEN`, and do not save them to files or include them in commentary.
+- The session lasts until `AWS_SSO_SESSION_EXPIRATION`. On expiry, repeat from step 1.
 
-   ```bash
-   ROLE_ARN='arn:aws:iam::...:role/AWSAdministratorAccess'
-   AWS_SSO_JSON="$(aws-sso process --arn "$ROLE_ARN" --sts-refresh)"
-   ```
+The environment credentials are inherited by AWS-backed tools such as `kubectl`, whose exec plugin runs `aws eks get-token`.
 
-   Treat `AWS_SSO_JSON` as secret material. Do not print it, save it to a file, or include its fields in commentary or logs.
+### Fallback: `aws-sso exec`
 
-4. Use the temporary credentials only in the shell that performs the requested AWS operation. Unset profile selectors so the broken/expired `credential_process` is not invoked again:
+If `eval` cannot be used, run a single command with credentials without touching the environment or config:
 
-   ```bash
-   unset AWS_PROFILE AWS_DEFAULT_PROFILE
-   export AWS_ACCESS_KEY_ID="$(printf '%s' "$AWS_SSO_JSON" | jq -r '.AccessKeyId')"
-   export AWS_SECRET_ACCESS_KEY="$(printf '%s' "$AWS_SSO_JSON" | jq -r '.SecretAccessKey')"
-   export AWS_SESSION_TOKEN="$(printf '%s' "$AWS_SSO_JSON" | jq -r '.SessionToken')"
-   aws sts get-caller-identity
-   ```
+```bash
+aws-sso exec --profile '<profile>' -- <command>
+```
 
-   Run the user-requested AWS CLI command in this same shell. These environment credentials are also inherited by AWS-backed tools such as `kubectl` when their exec plugin invokes `aws eks get-token`.
+## Do not use these
 
-5. Report the authentication result and the requested command result, but never report credential values. If `aws-sso process --sts-refresh` still fails after the browser session is authenticated, stop after the failed refresh and report the exact non-secret error instead of retrying in a loop.
+- **`aws-sso-profile <profile>`**: a shell function that exports variables into your interactive shell. In a Bash tool call it prints nothing and leaves no variables set.
+- **`aws ... --profile <profile>`**: the `credential_process` lines that `aws-sso` generated into `~/.aws/config` may use the old `aws-sso -u open ...` syntax, which `aws-sso` 2.x rejects with `unknown flag -u`. The failure looks like `Error when retrieving credentials from custom-process`. Use step 3 instead, which does not go through the config file.
+
+## Failures
+
+- `InvalidClientTokenId` or `ExpiredToken` after step 3: the variables were probably not exported. Check for a pipe on the `eval`, or run the `eval` in the same call as the command.
+- `aws-sso login` prints nothing and `aws-sso list` shows no roles: the login did not complete. Ask the user to finish the browser sign-in.
+- Step 3 still fails after a fresh login: stop and report the exact non-secret error. Do not retry in a loop.
 
 ## Important boundary
 
-This workflow authenticates the terminal for the current command only; it does not repair the profile’s persisted `credential_process`. A permanent profile repair is a separate task and requires explicit user direction.
+This workflow authenticates the terminal for the current command only; it does not repair the persisted `credential_process` lines in `~/.aws/config`. Regenerating them (`aws-sso config-profiles`) rewrites that file and is a separate task that needs explicit user direction.
